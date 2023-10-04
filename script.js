@@ -79,8 +79,16 @@ function showUserOnScreen(myObj){
     editbtn.type = "button";
     editbtn.value = "Edit";
     editbtn.onclick = () => {
-        localStorage.removeItem(myObj._id);
-        dataItems.removeChild(li);
+        axios.delete(`https://crudcrud.com/api/1d706cb932f647a49fc597f7f7718121/appointmentData/${myObj._id}`)
+            .then((response) => {
+                dataItems.removeChild(li);
+                
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        //localStorage.removeItem(myObj._id);
+        // dataItems.removeChild(li);
         document.getElementById('name').value = myObj.name;
         document.getElementById('email').value = myObj.email;
         document.getElementById('phone').value = myObj.phone;
