@@ -1,7 +1,7 @@
 var form = document.getElementById('my-form');
 
 form.addEventListener('submit', addDetails);
-fetchAndDisplayData();
+
 
 // add details of user
 function addDetails(e){
@@ -48,6 +48,7 @@ window.addEventListener("DOMContentLoaded", () => {
 })
 
 function showUserOnScreen(myObj){
+
     var dataItems = document.getElementById('dataItems');
     var li = document.createElement('li');
     dataItems.appendChild(li);
@@ -60,8 +61,15 @@ function showUserOnScreen(myObj){
     deletebtn.type = "button";
     deletebtn.value = "Delete";
     deletebtn.onclick = () => {
-        localStorage.removeItem(myObj.email);
-        dataItems.removeChild(li);
+        axios.delete(`https://crudcrud.com/api/1d706cb932f647a49fc597f7f7718121/appointmentData/${myObj._id}`)
+            .then((response) => {
+                dataItems.removeChild(li);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        // localStorage.removeItem(myObj._id);
+        // dataItems.removeChild(li);
     }
     li.appendChild(deletebtn);
     dataItems.appendChild(li);
@@ -71,7 +79,7 @@ function showUserOnScreen(myObj){
     editbtn.type = "button";
     editbtn.value = "Edit";
     editbtn.onclick = () => {
-        localStorage.removeItem(myObj.email);
+        localStorage.removeItem(myObj._id);
         dataItems.removeChild(li);
         document.getElementById('name').value = myObj.name;
         document.getElementById('email').value = myObj.email;
