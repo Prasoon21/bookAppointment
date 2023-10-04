@@ -33,6 +33,20 @@ function addDetails(e){
     form.reset();
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+    axios.get("https://crudcrud.com/api/1d706cb932f647a49fc597f7f7718121/appointmentData")
+        .then((response) => {
+            console.log(response)
+
+            for(var i=0;i<response.data.length;i++){
+                showUserOnScreen(response.data[i]);
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+})
+
 function showUserOnScreen(myObj){
     var dataItems = document.getElementById('dataItems');
     var li = document.createElement('li');
@@ -69,47 +83,3 @@ function showUserOnScreen(myObj){
     
 }
 
-function fetchAndDisplayData() {
-    var dataItems = document.getElementById('dataItems');
-    dataItems.innerHTML = '';  // Clear existing data
-
-    axios.get("https://crudcrud.com/api/1d706cb932f647a49fc597f7f7718121/appointmentData")
-        .then((response) => {
-            const data = response.data;
-            data.forEach((item) => {
-                const li = document.createElement('li');
-                li.appendChild(document.createTextNode(item.name + " - " + item.email + " - " + item.phone));
-
-                const deletebtn = document.createElement('input');
-                deletebtn.type = "button";
-                deletebtn.value = "Delete";
-                deletebtn.onclick = () => {
-                    // Handle delete functionality here
-                    axios.delete("https://crudcrud.com/api/1d706cb932f647a49fc597f7f7718121/appointmentData/" + item._id)
-                        .then(() => {
-                            dataItems.removeChild(li);
-                        })
-                        .catch((error) => {
-                            console.error("Error deleting item:", error);
-                        });
-                };
-                li.appendChild(deletebtn);
-
-                const editbtn = document.createElement('input');
-                editbtn.type = "button";
-                editbtn.value = "Edit";
-                editbtn.onclick = () => {
-                    // Handle edit functionality here
-                    document.getElementById('name').value = item.name;
-                    document.getElementById('email').value = item.email;
-                    document.getElementById('phone').value = item.phone;
-                };
-                li.appendChild(editbtn);
-
-                dataItems.appendChild(li);
-            });
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-        });
-}
