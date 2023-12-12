@@ -16,7 +16,7 @@ async function addUsers(event){
         const res = await axios.post("http://localhost:8000/user", user)
             
         console.log(res);
-        showUserOnScreen(res.data.newUserDetail);
+        showUserOnScreen(res.data);
 
         document.getElementById('name').value = '';
         document.getElementById('email').value = '';

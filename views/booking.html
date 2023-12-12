@@ -1,56 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+      crossorigin="anonymous"
+    />
+
     <title>Booking Appointment</title>
     <style>
-        body{
-            font-size: 20px;
-            background-color:blueviolet;
-        }
-        input{
-            width: 200px;
-            
-        }
-        .header-main{
-            text-align: center;
-        }
-        #my-form{
-            text-align: center;
-        }
+      body {
+        font-size: 20px;
+        background-color: blueviolet;
+      }
+      input {
+        width: 200px;
+      }
+      .header-main {
+        text-align: center;
+      }
+      #my-form {
+        text-align: center;
+      }
     </style>
-</head>
-<body>
-    
-    <div id="main" class="container">  
-        <h1>Booking Appointment APP</h1>
-        <form id="my-form" class="form-control" method="POST" onsubmit="addUsers(event)">
-            <div class="form-floating">
-                <lable for="name">Enter your name</lable><br>
-                <input type="text" class="mr-2 mb-2 mt-2" id="name" name="username" required><br>
-            </div>
-            <div class="form-floating">
-                <label for="email">Enter your email</label><br>
-                <input type="email" class="mr-2 mb-2 mt-2" id="email" name="emailId" required><br>
-            </div>
-            <div class="form-floating">
-                <label for="phone">Enter your phone</label><br>
-                <input type="tel" class="mr-2 mb-2 mt-2" id="phone" name="phoneNo"><br>
-            </div>
-            <button class="btn btn-info">Submit</button>
-        </form>
+  </head>
+  <body>
+    <div id="main" class="container">
+      <h1>Booking Appointment APP</h1>
+      <form id="my-form" class="form-control" action="http://localhost:8000/user" method="POST" onsubmit="addUsers(event)">
+        <div class="form-floating">
+          <lable for="name">Enter your name</lable><br />
+          <input type="text" class="mr-2 mb-2 mt-2" id="name" name="name" required/><br />
+        </div>
+        <div class="form-floating">
+          <label for="email">Enter your email</label><br />
+          <input type="email" class="mr-2 mb-2 mt-2" id="email" name="email" required /><br />
+        </div>
+        <div class="form-floating">
+          <label for="phone">Enter your phone</label><br />
+          <input type="number" class="mr-2 mb-2 mt-2" id="phone" name="phone"/><br />
+        </div>
+        <button type="submit" class="btn btn-info">Submit</button>
+      </form>
     </div>
     <div id="dataList">
-        <ul id="dataItems"></ul>
-
+      <ul id="dataItems"></ul>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="index.js">
-            
+    <script>
+      async function addUsers(event) {
+        try {
+          event.preventDefault();
+
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const phone = document.getElementById("phone").value;
+
+          const user = {
+            name: name,
+            email: email,
+            phone: phone,
+          };
+
+          const res = await axios.post("http://localhost:8000/user", user);
+
+          console.log(res);
+          showUserOnScreen(res.data);
+
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("phone").value = "";
+        } catch (error) {
+          document.body.innerHTML =
+            document.body.innerHTML + "<h4>Something went wrong</h4>";
+          console.log(error);
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await axios.get("http://localhost:8000/user");
+
+          console.log(res.data);
+
+          for (i = 0; i < res.data.length; i++) {
+            showUserOnScreen(res.data[i]);
+            console.log(res.data[i]);
+          }
+        } catch (err) {
+          document.body.innerHTML =
+            document.body.innerHTML + "<h4>Something went wrong</h4>";
+          console.log(err);
+        }
+      });
+
+      function showUserOnScreen(user) {
+        let parentNode = document.getElementById("dataItems");
+
+        const childNode = `<li id=${user.id}>${user.name}-${user.email}-${user.phone}
+                        <button onclick=deleteUser('${user.id}')>Delete</button>`;
+
+        parentNode.innerHTML = parentNode.innerHTML + childNode;
+      }
+
+      async function deleteUser(userid) {
+        try {
+          await axios.delete("http://localhost:8000/user/${userid}");
+          removeFromScreen(userid);
+        } catch (err) {
+          document.body.innerHTML =
+            document.body.innerHTML + "<h4>Something went wrong</h4>";
+          console.log(err);
+        }
+      }
+
+      function removeFromScreen(id) {
+        let parent = document.getElementById("dataItems");
+        const childNodeDeleted = document.getElementById(id);
+
+        parent.removeChild(childNodeDeleted);
+      }
     </script>
-</body>
+  </body>
 </html>
