@@ -39,7 +39,7 @@ exports.postUser = async (req, res, next) => {
         res.status(201).json({newUserDetail:data})
     }
     catch(error){
-        console.error('Error creating user:', err);
+        console.error('Error creating user:', error);
         res.status(500).json({ error: 'Error creating user' });
     }
 }

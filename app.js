@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 const cors = require('cors');
@@ -18,13 +19,16 @@ app.use(cors());
 app.use('/user', bookRoutes);
 
 
-app.use(errorController.Error404);
+//app.use(errorController.Error404);
 
 sequelize.sync()
     .then(() =>{
         console.log('database synced successfully');
         app.listen(8000, () => {
             console.log('Server is running on port 8000');
+            app.get('/user', (req, res) => {
+                res.sendFile(path.join(__dirname, "views", 'booking.html'));
+            })
         });
     })
     .catch(err => console.log(err))
