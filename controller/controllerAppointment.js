@@ -11,7 +11,7 @@ exports.getUser = async (req, res, next) => {
         const users = await User.findAll();
         console.log("users");
         console.log(users);
-        res.status(200).json({allUsers:users})
+        res.status(200).json(users)
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error));
         res.status(500).json({error:error})
@@ -26,9 +26,11 @@ exports.postUser = async (req, res, next) => {
             throw new Error('Phone number is mandatory')
         }
 
-        const name = req.body.name;
-        const email = req.body.email;
-        const phone = req.body.phone;
+        const {name,email,phone} = req.body;
+        console.log(req.body);
+        // const name = req.body.name;
+        // const email = req.body.email;
+        // const phone = req.body.phone;
         const data = await User.create({
             name:name,
             email:email,
@@ -36,7 +38,7 @@ exports.postUser = async (req, res, next) => {
         })
         console.log('updated success');
         console.log('User created successfully:', data);
-        res.status(201).json({newUserDetail:data})
+        res.status(201).json(data)
     }
     catch(error){
         console.error('Error creating user:', error);

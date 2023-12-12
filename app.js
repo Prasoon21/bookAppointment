@@ -26,7 +26,7 @@ sequelize.sync()
         console.log('database synced successfully');
         app.listen(8000, () => {
             console.log('Server is running on port 8000');
-            app.get('/user', (req, res) => {
+            app.get('/welcome', (req, res) => {
                 res.sendFile(path.join(__dirname, "views", 'booking.html'));
             })
         });

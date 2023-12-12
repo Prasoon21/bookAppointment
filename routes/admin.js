@@ -5,7 +5,7 @@ const route = express.Router();
 
 const rootDir = require('../util/path');
 
-const appointmentUser = require('../controller/controller appointment')
+const appointmentUser = require('../controller/controllerAppointment')
 
 
 
